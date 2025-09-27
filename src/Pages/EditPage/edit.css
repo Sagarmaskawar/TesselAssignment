@@ -1,0 +1,45 @@
+.editPageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  gap: 10px;
+}
+select{
+    width: 100%;
+    height: 20px;
+    margin: 20px 0px;
+}
+option{
+    font-size: 14px;
+    font-weight: 400;
+    color: #231F20;
+    font-family: Jost;
+}
+.Pending-circle, .inprogess-circle, .Completed-circle {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.Pending-circle { background-color: gray; }
+.inprogess-circle { background-color: orange; }
+.Completed-circle { background-color: green; }
+.cancel-button, .add-button{
+    width: 110px;
+    height: 40px;
+    padding: 10px;
+    border: 1px solid #034EA2;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: transparent;
+    font-size: 12px;
+    font-weight: 400;
+    color:#034EA2;
+}
+.add-button{
+    background-color: #034EA2;
+    color: white;
+}

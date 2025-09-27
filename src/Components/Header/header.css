@@ -1,0 +1,36 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background: white;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+  background: #034EA2;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.backBtn {
+  margin-right: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF;
+  font-family: Jost;
+}
+
+.main {
+  padding: 20px;
+}

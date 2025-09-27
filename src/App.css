@@ -1,0 +1,16 @@
+/* Global styles */
+body {
+  margin: 0;
+  background-color: whitesmoke; /* cream background */
+  display: flex;
+  justify-content: center; /* center horizontally */
+}
+
+/* #root becomes the app wrapper */
+#root {
+  width: 100%;
+  max-width: 600px;   /* mobile max width */
+  min-height: 100vh;  /* full height */
+  background: white;  /* app background */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}

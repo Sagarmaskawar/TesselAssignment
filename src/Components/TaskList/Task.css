@@ -1,0 +1,118 @@
+.task-list-header{
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+    background-color: #F3F6F9;
+    border-radius: 5px;
+}
+img{
+    cursor: pointer;
+}
+.task-list{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-sizing: border-box;
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 10px 0px;
+}
+.heading-status{
+    font-size: 12px;
+    font-weight: 400;
+    color: #231F20;
+    font-family: Jost;
+}
+.span-count{
+     font-size: 12px;
+    font-weight: 700;
+    color: #231F20;
+    font-family: Jost;
+}
+.task-item {
+  display: flex;
+  align-items: start;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #DDDDDD;
+    padding-bottom: 10px;
+    cursor: pointer;
+}
+
+.task-circle {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #FFFFFF; /* choose any color */
+  color: #034EA2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 10px;
+  text-transform: uppercase;
+  border: 1px solid #034EA2;
+}
+
+.task-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #034EA2;
+  margin: 0;
+  font-family: Jost;
+}
+.task-desc{
+    font-size: 12px;
+    font-weight: 400;
+    color: #231F20;
+    margin: 0;
+    font-family: Jost;
+}
+.inprogesss-circle, .Completed-circle, .pending-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: orange;
+    display: inline-block;
+    margin-right: 5px;
+}
+.Completed-circle {
+    background-color: green;
+}
+.pending-circle {
+    background-color: gray;
+}
+.task-details{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.task-content{
+    width: 100%;
+}
+.status-span{
+    font-size: 12px;
+    font-weight: 500;
+    color: #231F20;
+    font-family: Jost;
+}
+.created-at{
+    font-size: 10px;
+    font-weight: 400;
+    color: #767676;
+    font-family: Jost;
+}
+.task-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
