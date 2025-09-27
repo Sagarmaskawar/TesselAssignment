@@ -2,14 +2,14 @@ import React from "react";
 import "./Header.css";
 import backImg from "../../assets/images/BackPage_Button.svg";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { routeTitles } from "../../utils";
+import { getRouteTitle} from "../../utils";
 
 const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const currentPath = location.pathname;
-  const title = routeTitles[currentPath] || "Page";
+const title = getRouteTitle(location.pathname);
   const showBack = currentPath !== "/";
 
   return (

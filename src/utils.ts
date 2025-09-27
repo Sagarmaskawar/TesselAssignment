@@ -1,6 +1,6 @@
-// utils.ts
-export const routeTitles: Record<string, string> = {
-  "/": "Home",
-  "/add": "Add Task",
-  "/edit": "Edit Task",
+export const getRouteTitle = (pathname: string) => {
+  if (pathname === "/") return "Home";
+  if (pathname === "/add") return "Add Task";
+  if (pathname.startsWith("/edit/")) return "Edit Task";
+  return "Page";
 };
