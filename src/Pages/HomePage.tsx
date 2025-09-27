@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./Home.css";
 import addImg from "../assets/images/addtodoButton.svg";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import TaskList from "../Components/TaskList/TaskList";
 
 const statuses: TaskStatus[] = ["In Progress", "Pending", "Completed"];
-const statusLabels: Record<TaskStatus, string> = {
-  Pending: "Pending",
-  "In Progress": "In Progress",
-  Completed: "Completed",
-};
 
 export default function HomePage() {
   const { tasks } = useTasks();

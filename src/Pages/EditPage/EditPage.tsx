@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState,  } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTasks } from "../../hooks/TaskContext";
 import type { TaskStatus } from "../../hooks/types";
 import { TextareaAutosize, TextField } from "@mui/material";
-import { Select, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
+import { Select, MenuItem, ListItemText } from "@mui/material";
 import "./edit.css";
 const statusLabels: Record<string, string> = {
   Pending: "Pending",
