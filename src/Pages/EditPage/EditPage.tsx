@@ -1,10 +1,10 @@
-import { useState,  } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTasks } from "../../hooks/TaskContext";
 import type { TaskStatus } from "../../hooks/types";
-import { TextareaAutosize, TextField } from "@mui/material";
+import { TextField} from "@mui/material";
 import { Select, MenuItem, ListItemText } from "@mui/material";
-import "./edit.css";
+
 const statusLabels: Record<string, string> = {
   Pending: "Pending",
   "In Progress": "In Progress",
@@ -12,47 +12,47 @@ const statusLabels: Record<string, string> = {
 };
 
 export default function EditPage() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { tasks, updateTask } = useTasks();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState<TaskStatus>("Pending");
 
-  const allTasks = Object.values(tasks).flat();
-  const taskToEdit = allTasks.find((t) => t.id === Number(id));
-
-  const [title, setTitle] = useState(taskToEdit?.title || "");
-  const [description, setDescription] = useState(taskToEdit?.description || "");
-  const [status, setStatus] = useState<TaskStatus>(
-    taskToEdit?.status || "Pending"
-  );
-
-  //   useEffect(() => {
-  //     if (!taskToEdit) navigate("/");
-  //   }, [taskToEdit]);
+  useEffect(() => {
+    if (!id) return;
+    const taskId = parseInt(id);
+    let found: any;
+    for (const key of Object.keys(tasks) as TaskStatus[]) {
+      found = tasks[key].find(t => t.id === taskId);
+      if (found) break;
+    }
+    if (found) {
+      setTitle(found.title);
+      setDescription(found.description);
+      setStatus(found.status);
+    }
+  }, [id, tasks]);
 
   const handleUpdate = () => {
-    if (!taskToEdit) return;
-    updateTask({ ...taskToEdit, title, description, status });
+    if (!id) return;
+    updateTask(parseInt(id), title, description, status);
     navigate("/");
   };
 
   return (
-    <div className="editPageContainer">
+    <div style={{ padding: 20 }}>
+      <TextField fullWidth label="Title" value={title} onChange={e => setTitle(e.target.value)} margin="normal" />
       <TextField
-        variant="outlined"
-        placeholder="Enter the title "
         fullWidth
-        onChange={(e) => setTitle(e.target.value)}
-        value={title}
-      />
-      <TextareaAutosize
-        minRows={4}
-        style={{ width: "96%", marginTop: 20, padding: 10 }}
-        onChange={(e) => setDescription(e.target.value)}
+        label="Description"
         value={description}
-        aria-label="empty textarea"
-        placeholder="Enter the description"
+        onChange={e => setDescription(e.target.value)}
+        multiline
+        rows={4}
+        margin="normal"
       />
-      <Select
+       <Select
         value={status}
         onChange={(e) => setStatus(e.target.value as TaskStatus)}
         fullWidth
@@ -86,14 +86,14 @@ export default function EditPage() {
           <ListItemText>Completed</ListItemText>
         </MenuItem>
       </Select>
-      <div className="button-container">
-        <button className="cancel-button" onClick={() => navigate("/")}>
+      <div  className="button-container">
+        <button className='cancel-button' onClick={() => navigate("/")}>
           Cancel
         </button>
-        <button className="add-button" onClick={handleUpdate}>
+         <button className="add-button"  onClick={handleUpdate} >
           Update
         </button>
-      </div>
+        </div>
     </div>
   );
 }

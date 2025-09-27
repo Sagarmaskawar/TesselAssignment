@@ -11,7 +11,7 @@
     justify-content: space-between;
     gap: 10px;
 }
-.cancel-button, .add-button{
+.cancel-button{
     width: 110px;
     height: 40px;
     padding: 10px;
@@ -24,6 +24,27 @@
     color:#034EA2;
 }
 .add-button{
+     width: 110px;
+    height: 40px;
+    padding: 10px;
+    border: 1px solid #034EA2;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: transparent;
+    font-size: 12px;
+    font-weight: 400;
     background-color: #034EA2;
     color: white;
 }
+
+.Pending-circle, .inprogess-circle, .Completed-circle {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.Pending-circle { background-color: gray; }
+.inprogess-circle { background-color: orange; }
+.Completed-circle { background-color: green; }

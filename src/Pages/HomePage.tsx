@@ -8,31 +8,40 @@ import { InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import TaskList from "../Components/TaskList/TaskList";
 
-const statuses: TaskStatus[] = ["In Progress", "Pending", "Completed"];
+const statuses: TaskStatus[] = ["Pending", "In Progress", "Completed"];
 
 export default function HomePage() {
   const { tasks } = useTasks();
-  const [activeTab, setActiveTab] = useState<TaskStatus>("Pending");
+  const [activeTab, setActiveTab] = useState<TaskStatus | null>("Pending");
   const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState<"All" | "Completed" | "Incomplete">("All");
   const navigate = useNavigate();
 
-  const openTab = (status: TaskStatus) => {
-    if (activeTab === status) {
-      setActiveTab("none" as TaskStatus);
-    } else {
-      setActiveTab(status);
-    }
+  const openTab = (status: TaskStatus) => setActiveTab(prev => (prev === status ? null : status));
+
+  const getFilteredTasks = (status: TaskStatus) => {
+    return tasks[status]?.filter(task => {
+      const matchesSearch =
+        task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        task.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesFilter =
+        filter === "All" ||
+        (filter === "Completed" && task.status === "Completed") ||
+        (filter === "Incomplete" && task.status !== "Completed");
+
+      return matchesSearch && matchesFilter;
+    }) || [];
   };
 
   return (
     <div className="homePageContainer">
-      {/* Search Input */}
       <TextField
         variant="outlined"
         placeholder="Search To-Do"
         fullWidth
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={e => setSearchTerm(e.target.value)}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -42,30 +51,27 @@ export default function HomePage() {
         }}
       />
 
-      {/* Task Lists */}
-      <div className="taskListsContainer">
-        {statuses.map((status, index) => {
-          // Filter tasks based on search term
-          const filteredTasks = tasks[status]?.filter(
-            (task) =>
-              task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              task.description.toLowerCase().includes(searchTerm.toLowerCase())
-          );
-
-          return (
-            <TaskList
-              key={index}
-              status={status}
-              count={filteredTasks?.length || 0}
-              todos={filteredTasks}
-              openTab={openTab}
-              isOpen={activeTab === status}
-            />
-          );
-        })}
+      <div style={{ margin: "10px 0" }}>
+        <select value={filter} onChange={e => setFilter(e.target.value as any)}>
+          <option value="All">All</option>
+          <option value="Incomplete">Incomplete</option>
+          <option value="Completed">Completed</option>
+        </select>
       </div>
 
-      {/* Add Task Button */}
+      <div className="taskListsContainer">
+        {statuses.map(status => (
+          <TaskList
+            key={status}
+            status={status}
+            count={getFilteredTasks(status).length}
+            todos={getFilteredTasks(status)}
+            openTab={openTab}
+            isOpen={activeTab === status}
+          />
+        ))}
+      </div>
+
       <div className="add-todo" onClick={() => navigate("/add")}>
         <img src={addImg} alt="Add" />
       </div>

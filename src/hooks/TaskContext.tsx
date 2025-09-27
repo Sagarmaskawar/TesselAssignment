@@ -1,87 +1,69 @@
-import React, { createContext, useState, useContext } from "react";
-import type { Task, TaskState, TaskStatus } from "./types";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import type { Task, TaskStatus, TaskState } from "./types";
 
 interface TaskContextType {
   tasks: TaskState;
-  addTask: (title: string, description: string) => void;
-  updateTask: (task: Task) => void;
-  deleteTask: (id: number, status: TaskStatus) => void;
-  moveTask: (id: number, from: TaskStatus, to: TaskStatus) => void;
+  addTask: (title: string, description: string, status: TaskStatus) => void;
+  updateTask: (id: number, title: string, description: string, status: TaskStatus) => void;
+  deleteTask: (id: number) => void;
 }
+
+const defaultTasks: TaskState = {
+  Pending: [],
+  "In Progress": [],
+  Completed: [],
+};
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [tasks, setTasks] = useState<TaskState>({
-    Pending: [
-      
-    ],
-    "In Progress": [
-      
-    ],
-    Completed: [
-      
-    ],
+export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [tasks, setTasks] = useState<TaskState>(() => {
+    const stored = localStorage.getItem("tasks");
+    return stored ? JSON.parse(stored) : defaultTasks;
   });
 
-  const addTask = (title: string, description: string) => {
-     const now = new Date();
-  const formattedDate = now.toLocaleDateString("en-US", {
-    weekday: "short", // Wed
-    day: "2-digit",  // 31
-    month: "short",  // Jun
-    year: "numeric", // 2024
-  });
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  const addTask = (title: string, description: string, status: TaskStatus) => {
     const newTask: Task = {
       id: Date.now(),
       title,
       description,
-      status: "Pending",
-      createdAt: formattedDate,
+      status,
+      createdAt: new Date().toISOString(),
     };
-    setTasks((prev) => ({ ...prev, Pending: [...prev.Pending, newTask] }));
+    setTasks(prev => ({ ...prev, [status]: [...prev[status], newTask] }));
   };
-  
-  const updateTask = (updatedTask: Task) => {
-    setTasks((prev) => {
-      // Remove task from old status
-      const newState = { ...prev };
-      Object.keys(newState).forEach((key) => {
-        newState[key as TaskStatus] = newState[key as TaskStatus].filter(
-          (t) => t.id !== updatedTask.id
-        );
-      });
-      // Add task to updated status
-      newState[updatedTask.status].push(updatedTask);
-      return newState;
+
+  const updateTask = (id: number, title: string, description: string, status: TaskStatus) => {
+    setTasks(prev => {
+      // Remove the task from its previous status
+      const updated: TaskState = {
+        Pending: prev.Pending.filter(t => t.id !== id),
+        "In Progress": prev["In Progress"].filter(t => t.id !== id),
+        Completed: prev.Completed.filter(t => t.id !== id),
+      };
+
+      // Add the updated task to the new status
+      const updatedTask: Task = { id, title, description, status, createdAt: new Date().toISOString() };
+      updated[status] = [...updated[status], updatedTask];
+
+      return updated;
     });
   };
 
-  const deleteTask = (id: number, status: TaskStatus) => {
-    setTasks((prev) => ({
-      ...prev,
-      [status]: prev[status].filter((t) => t.id !== id),
+  const deleteTask = (id: number) => {
+    setTasks(prev => ({
+      Pending: prev.Pending.filter(t => t.id !== id),
+      "In Progress": prev["In Progress"].filter(t => t.id !== id),
+      Completed: prev.Completed.filter(t => t.id !== id),
     }));
   };
 
-  const moveTask = (id: number, from: TaskStatus, to: TaskStatus) => {
-    setTasks((prev) => {
-      const task = prev[from].find((t) => t.id === id);
-      if (!task) return prev;
-      return {
-        ...prev,
-        [from]: prev[from].filter((t) => t.id !== id),
-        [to]: [...prev[to], { ...task, status: to }],
-      };
-    });
-  };
-
   return (
-    <TaskContext.Provider
-      value={{ tasks, addTask, updateTask, deleteTask, moveTask }}
-    >
+    <TaskContext.Provider value={{ tasks, addTask, updateTask, deleteTask }}>
       {children}
     </TaskContext.Provider>
   );

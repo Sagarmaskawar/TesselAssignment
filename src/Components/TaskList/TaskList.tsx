@@ -9,39 +9,41 @@ import { useTasks } from "../../hooks/TaskContext";
 import { useNavigate } from "react-router-dom";
 
 interface TaskListProps {
-  status: string;
+  status: TaskStatus;
   count: number;
   todos?: any[];
   openTab: (status: TaskStatus) => void;
   isOpen: boolean;
 }
 
-const TaskList: React.FC<TaskListProps> = (props) => {
+const TaskList: React.FC<TaskListProps> = ({
+  status,
+  count,
+  todos,
+  openTab,
+  isOpen,
+}) => {
   const navigate = useNavigate();
-  const { status, count, todos, openTab, isOpen } = props;
-  const [selected, setSelected] = React.useState(0);
   const { deleteTask } = useTasks();
+  const [selected, setSelected] = React.useState<number | null>(null);
 
   const onDelete = (id: number) => {
-    deleteTask(id, status as TaskStatus);
+    deleteTask(id);
   };
 
   return (
     <div className="task-list">
-      <div
-        className="task-list-header"
-        onClick={() => openTab(status as TaskStatus)}
-      >
+      <div className="task-list-header" onClick={() => openTab(status)}>
         <h3 className="heading-status">
-          {status}
-          <span className="span-count">({count})</span>
+          {status} <span className="span-count">({count})</span>
         </h3>
         <img
           src={isOpen ? upArrow : downArrow}
-          alt="up arrow"
+          alt="arrow"
           style={{ width: 15, height: 15, marginRight: 10 }}
         />
       </div>
+
       {isOpen &&
         todos &&
         todos.map((todo) => (
@@ -49,19 +51,15 @@ const TaskList: React.FC<TaskListProps> = (props) => {
             className="task-item"
             key={todo.id}
             onClick={() => setSelected(todo.id)}
-            style={
-              selected === todo.id
-                ? { background: "#F7F7F7" }
-                : { background: "" }
-            }
+            style={selected === todo.id ? { background: "#F7F7F7" } : {}}
           >
-            <div className="task-circle">
-              {todo.title.charAt(0).toUpperCase()}
-            </div>
+            {/* Circle Avatar */}
+            <div className="task-circle">{todo.title.charAt(0).toUpperCase()}</div>
+
             <div className="task-content">
+              {/* Title + Status */}
               <div className="task-details">
-                {" "}
-                <h4 className="task-title">{todo.title}</h4>{" "}
+                <h4 className="task-title">{todo.title}</h4>
                 <div>
                   <div
                     className={
@@ -75,12 +73,20 @@ const TaskList: React.FC<TaskListProps> = (props) => {
                   <span className="status-span">{status}</span>
                 </div>
               </div>
+
+              {/* Description */}
               <p className="task-desc">{todo.description}</p>
+
+              {/* Footer: Created Date + Edit/Delete */}
               <div className="task-footer">
                 <span className="created-at">{todo.createdAt}</span>
                 {selected === todo.id && (
-                  <div>
-                    <img src={editIcon} alt="edit" onClick={()=> navigate(`/edit/${todo.id}`)}/>
+                  <div className="task-actions">
+                    <img
+                      src={editIcon}
+                      alt="edit"
+                      onClick={() => navigate(`/edit/${todo.id}`)}
+                    />
                     <img
                       src={deleteIcon}
                       alt="delete"
