@@ -1,5 +1,5 @@
 import React from "react";
-import "./Header.css";
+import "./header.css";
 import backImg from "../../assets/images/BackPage_Button.svg";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { getRouteTitle} from "../../utils";
